@@ -1,40 +1,122 @@
 <script lang="ts">
+	import { createEventDispatcher } from "svelte"
+	
+	const dispatch = createEventDispatcher()
+	
+	export let question: string
 	export let correctAnswer: string
 	export let incorrectAnswers: string[]
 	
-	let answers = [...incorrectAnswers, correctAnswer]
-	// shuffle the answers
-	answers = answers.sort((f, l) => Math.random() - 0.5)
+	enum Status {
+		neutral = 0,
+		pending = 1,
+		correct = 2,
+		incorrect = 3
+	}
 	
-	let isCorrect;
-	let isIncorrect;
+	// the message that displays when the player picks
+	let choiceMsg = ""
+	// whether or not the player is correct
+	let playerCorrect: bool
+	let answers: object[]
+		
+	$: {
+		correctAnswer = correctAnswer
+		choiceMsg = ""
+		playerCorrect = undefined
+		answers =
+			// merge the answers
+			[...incorrectAnswers, correctAnswer]
+			// give each answer a status
+			.map(answer => {
+				return { text: answer, status: Status.neutral }
+			})
+			// shuffle the answers
+			.sort((f, l) => Math.random() - 0.5)
+	}
+	
+	const pickAnswer = (answer: object): void => {
+		answers = answers.map(item => {
+			return {...item, status: Status.pending}
+		})
+		
+		setTimeout(() => {
+			
+			answers = answers.map(item => {
+				if (item.text === correctAnswer) {
+					return {...item, status: Status.correct}
+				} else {
+					return {...item, status: Status.incorrect}
+				}
+			})
+			
+			if (answer.text === correctAnswer) {
+				choiceMsg = "Correct!"
+				playerCorrect = true
+			} else {
+				choiceMsg = "Wrong!"
+				playerCorrect = false
+			}
+			
+			setTimeout(() => {
+				dispatch("answer", { playerCorrect })
+			}, 1000)
+		}, 2000)
+	}
 </script>
 
-<div class="questions">
-	{#each answers as answer}
-		<button
-			data-answer="{ answer }"
-			class:success={isCorrect}
-			class:failure={isIncorrect}
-		>
-			{ answer }
-		</button>
-	{/each}
-</div>
+<article class="box">
+	<h2>{@html question }</h2>
+	
+	<div class="answers">
+		{#each answers as answer}
+			<button
+				data-answer="{ answer.text }"
+				class:pending="{ answer.status === Status.pending }"
+				class:correct="{ answer.status === Status.correct }"
+				class:incorrect="{ answer.status === Status.incorrect }"
+				on:click="{ () => pickAnswer(answer) }"
+			>
+				{ answer.text }
+			</button>
+		{/each}
+	</div>
+	<h3
+		class:correct="{ playerCorrect }"
+		class:incorrect="{ !playerCorrect }"
+	>
+		{ choiceMsg }
+	</h3>
+</article>
 
 <style>
-	.questions > button + button {
+	.box {
+		background: white;
+		box-shadow: var(--shadow-lg);
+		padding: 1em;
+		border-radius: 0.5em;
+	}
+	
+	h2 {
+		color: var(--heading-clr);
+		font-size: 1.25rem;
+		margin-bottom: 1.25em;
+		padding-bottom: 1em;
+		border-bottom: 3px solid var(--heading-clr);
+	}
+	
+	.answers > button + button {
 		margin-top: 1.4rem;
 	}
 	
 	@media only screen and (min-width: 48rem) {
-		.questions {
+		.answers {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 			gap: 1rem;
 		}
 		
-		.questions > button + button {
+		.answers > button + button {
 			margin-top: 0;
 		}
 	}
@@ -53,20 +135,46 @@
 		background: var(--primary-clr-dark);
 	}
 	
-	button.success {
-		background: #32ed32;
-		border-color: #13c513;
-	}
-	button.success:hover {
-		background: #13c513;
+	button:focus {
+		box-shadow: var(--shadow-outline);
 	}
 	
-	button.failure {
-		background: #f03535;
-		border-color: #bc1010;
+	button.pending {
+		background: var(--yellow-clr);
+		border-color: var(--yellow-clr-dark);
+	}
+	button.pending:hover {
+		background: var(--yellow-clr-dark);
 	}
 	
-	button:hover {
-		background: #bc1010;
+	button.correct {
+		background: var(--green-clr);
+		border-color: var(--green-clr-dark);
+	}
+	button.correct:hover {
+		background: var(--green-clr-dark);
+	}
+	
+	button.incorrect {
+		background: var(--red-clr);
+		border-color: var(--red-clr-dark);
+	}
+	
+	button.incorrect:hover {
+		background: var(--red-clr-dark);
+	}
+	
+	h3 {
+		font-size: 1rem;
+		margin-top: 1.5em;
+		text-align: center;
+	}
+	
+	h3.correct {
+		color: var(--green-clr);
+	}
+	
+	h3.incorrect {
+		color: var(--red-clr);
 	}
 </style>

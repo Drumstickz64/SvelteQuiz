@@ -1,19 +1,49 @@
 <script lang="ts">
+	import { questionStore } from "./stores"
 	import Header from "./components/Header.svelte"
 	import Footer from "./components/Footer.svelte"
 	import Question from "./components/Question.svelte"
 	
-	export let item: object;
+	let score = 0
+	let lives = 3
+	
+	let questions: object[] = $questionStore
+	let currentQuestionIndex = 0
+
+	
+	const handleAnswer = (ev: CustomEvent): void => {
+		if (ev.detail.playerCorrect) {
+			score++
+			displayNextQuestion()
+		} else {
+			lives--;
+			
+			if (lives === 0) {
+				reset()
+			} else {
+				displayNextQuestion()
+			}
+		}
+	}
+	
+	const displayNextQuestion = () => {
+		currentQuestionIndex++
+	}
+	
+	const reset = () => {
+		alert("reset")
+	}
 </script>
 
 <Header></Header>
 
 <main>
-	<article class="box">
-		<h2>{@html item.question }</h2>
-		
-		<Question {...item}></Question>
-	</article>
+	<div class="splitter">
+		<h3 id="score">Score: { score }</h3>
+		<h3 id="lives">Lives: { lives }</h3>
+	</div>
+	
+	<Question on:answer="{ handleAnswer }" {...questions[currentQuestionIndex]}></Question>
 </main>
 
 <Footer></Footer>
@@ -22,22 +52,19 @@
 	main {
 		width: 85%;
 		max-width: 75rem;
-		margin: 1rem auto;
+		margin: 1.2rem auto;
 		padding: 0 0.5em;
 	}
 	
-	.box {
-		background: white;
-		box-shadow: var(--shadow-lg);
-		padding: 1em;
-		border-radius: 0.5em;
+	.splitter {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 	
-	h2 {
-		color: var(--heading-clr);
-		font-size: 1.25rem;
-		margin-bottom: 1.25em;
-		padding-bottom: 1em;
-		border-bottom: 3px solid var(--heading-clr);
+	#score, #lives {
+		font-weight: 700;
+		font-size: 1.2rem;
+		margin: 0 0 0.5em;
 	}
 </style>
