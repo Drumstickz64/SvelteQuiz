@@ -9,13 +9,18 @@
 	
 	// automatic subscription
 	let questions: object[]
-	let currentQuestionIndex = -1
-	let currentQuestion
+	let currentQuestion: undefined|object
+	let difficulty = "easy"
 	
-	$: questions = $questionStore
+	$: {
+		questions = $questionStore
+		if (questions.length < 3) {
+			questionStore.loadQuestions(difficulty)
+		}
+	}
 	
 	const setup = async () => {
-		await questionStore.loadQuestions("easy")
+		await questionStore.loadQuestions(difficulty)
 		displayNextQuestion()
 	}
 	
@@ -37,8 +42,7 @@
 	const displayNextQuestion = () => {
 		currentQuestion = undefined
 		setTimeout(() => {
-			currentQuestionIndex++
-			currentQuestion = questions[currentQuestionIndex]
+			currentQuestion = questions.shift()
 		}, 1200)
 	}
 	
@@ -53,13 +57,13 @@
 	{#await setup()}
 		<p>loading...</p>
 	{:then}
-		{@debug currentQuestion}
 		<div class="splitter">
 			<h3 id="score">Score: { score }</h3>
 			<h3 id="lives">Lives: { lives }</h3>
 		</div>
 		
 		{#if currentQuestion}
+			{@debug currentQuestion}
 			<Question
 				on:answer="{ handleAnswer }"
 				{...currentQuestion}
