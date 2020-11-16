@@ -43,7 +43,7 @@
 	}
 	
 	const reset = () => {
-		alert("reset")
+		window.location.reload()
 	}
 </script>
 
