@@ -5,8 +5,8 @@
 	const dispatch = createEventDispatcher()
 	
 	export let question: string
-	export let correctAnswer: string
-	export let incorrectAnswers: string[]
+	export let correct_answer: string
+	export let incorrect_answers: string[]
 	
 	enum Status {
 		neutral = 0,
@@ -22,12 +22,12 @@
 	let answers: object[]
 		
 	$: {
-		correctAnswer = correctAnswer
+		correct_answer = correct_answer
 		choiceMsg = ""
 		playerCorrect = undefined
 		answers =
 			// merge the answers
-			[...incorrectAnswers, correctAnswer]
+			[...incorrect_answers, correct_answer]
 			// give each answer a status
 			.map(answer => {
 				return { text: answer, status: Status.neutral }
@@ -44,14 +44,14 @@
 		setTimeout(() => {
 			
 			answers = answers.map(item => {
-				if (item.text === correctAnswer) {
+				if (item.text === correct_answer) {
 					return {...item, status: Status.correct}
 				} else {
 					return {...item, status: Status.incorrect}
 				}
 			})
 			
-			if (answer.text === correctAnswer) {
+			if (answer.text === correct_answer) {
 				choiceMsg = "Correct!"
 				playerCorrect = true
 			} else {

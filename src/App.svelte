@@ -8,10 +8,16 @@
 	let lives = 3
 	
 	// automatic subscription
-	let questions: object[] = $questionStore
+	let questions: object[]
 	let currentQuestionIndex = -1
 	let currentQuestion
 	
+	$: questions = $questionStore
+	
+	const setup = async () => {
+		await questionStore.loadQuestions("easy")
+		displayNextQuestion()
+	}
 	
 	const handleAnswer = (ev: CustomEvent): void => {
 		if (ev.detail.playerCorrect) {
@@ -39,24 +45,27 @@
 	const reset = () => {
 		alert("reset")
 	}
-	
-	displayNextQuestion()
 </script>
 
 <Header></Header>
 
 <main>
-	<div class="splitter">
-		<h3 id="score">Score: { score }</h3>
-		<h3 id="lives">Lives: { lives }</h3>
-	</div>
-	
-	{#if currentQuestion}
-		<Question
-			on:answer="{ handleAnswer }"
-			{...currentQuestion}
-		></Question>
-	{/if}
+	{#await setup()}
+		<p>loading...</p>
+	{:then}
+		{@debug currentQuestion}
+		<div class="splitter">
+			<h3 id="score">Score: { score }</h3>
+			<h3 id="lives">Lives: { lives }</h3>
+		</div>
+		
+		{#if currentQuestion}
+			<Question
+				on:answer="{ handleAnswer }"
+				{...currentQuestion}
+			></Question>
+		{/if}
+	{/await}
 </main>
 
 <Footer></Footer>

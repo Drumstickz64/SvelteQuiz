@@ -1,33 +1,19 @@
 import { writable } from "svelte/store"
+import axios from "axios"
 
-class QuestionStore extends writable {
-	constructor() {
-		super([
-			{
-				category:"Entertainment: Television",
-				type:"multiple",
-				difficulty:"easy",
-				question:"In the original Star Trek TV series, what was Captain James T. Kirk&#039;s middle name?",
-				correctAnswer:"Tiberius jebdnebe bdbdnenebebebe bebebw bwbwbwbw bwbewjebdjwb djebeje",
-				incorrectAnswers:["Trevor","Travis","Tyrone"]
-			},
-			{
-				category:"Entertainment: Music",
-				type:"multiple",
-				difficulty:"easy",
-				question:"What is the name of the album released in 2014 by American band Maroon 5?",
-				correctAnswer:"V",
-				incorrectAnswers:["X","III","IV"]
-			}
-		])
-	}
+const QuestionStore = (): object => {
+	const { subscribe, update } = writable([])
 	
-	// loadQuestions(difficulty: string): object[]  {
-		
-	// }
+	return {
+	 	subscribe,
+		loadQuestions: async (difficulty: string): Promise<void> => {
+			const req = await axios.get(`https://opentdb.com/api.php?amount=10&difficulty=${difficulty}`)
+			update(questions => [...questions, ...req.data.results])
+		} 
+	}
 }
 
-const questionStore = new QuestionStore()
+const questionStore = QuestionStore()
 
 export {
 	questionStore
