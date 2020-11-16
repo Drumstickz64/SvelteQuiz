@@ -7,9 +7,11 @@
 	let score = 0
 	let lives = 3
 	
+	// automatic subscription
 	let questions: object[] = $questionStore
-	let currentQuestionIndex = 0
-
+	let currentQuestionIndex = -1
+	let currentQuestion
+	
 	
 	const handleAnswer = (ev: CustomEvent): void => {
 		if (ev.detail.playerCorrect) {
@@ -27,12 +29,18 @@
 	}
 	
 	const displayNextQuestion = () => {
-		currentQuestionIndex++
+		currentQuestion = undefined
+		setTimeout(() => {
+			currentQuestionIndex++
+			currentQuestion = questions[currentQuestionIndex]
+		}, 1200)
 	}
 	
 	const reset = () => {
 		alert("reset")
 	}
+	
+	displayNextQuestion()
 </script>
 
 <Header></Header>
@@ -43,7 +51,12 @@
 		<h3 id="lives">Lives: { lives }</h3>
 	</div>
 	
-	<Question on:answer="{ handleAnswer }" {...questions[currentQuestionIndex]}></Question>
+	{#if currentQuestion}
+		<Question
+			on:answer="{ handleAnswer }"
+			{...currentQuestion}
+		></Question>
+	{/if}
 </main>
 
 <Footer></Footer>

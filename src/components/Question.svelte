@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte"
+	import { fly, fade } from "svelte/transition"
 	
 	const dispatch = createEventDispatcher()
 	
@@ -65,7 +66,10 @@
 	}
 </script>
 
-<article class="box">
+<article
+	class="box"
+	transition:fly="{{ x: -1000, duration: 1200 }}"
+>
 	<h2>{@html question }</h2>
 	
 	<div class="answers">
@@ -136,6 +140,7 @@
 	}
 	
 	button:focus {
+		outline: none;
 		box-shadow: var(--shadow-outline);
 	}
 	
