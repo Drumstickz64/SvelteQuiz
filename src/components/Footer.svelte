@@ -4,8 +4,9 @@
 
 <style>
 	footer {
+		position: fixed;
+		bottom: 0;
 		width: 100%;
-		margin: 4rem 0 0;
 		padding: 1em;
 		text-align: center;
 		background: #2e293c;

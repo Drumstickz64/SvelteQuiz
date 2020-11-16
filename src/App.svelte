@@ -65,7 +65,7 @@
 	main {
 		width: 85%;
 		max-width: 75rem;
-		margin: 1.2rem auto;
+		margin: 1.2rem auto 10rem;
 		padding: 0 0.5em;
 	}
 	
