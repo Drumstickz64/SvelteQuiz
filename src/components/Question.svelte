@@ -21,11 +21,14 @@
 	// whether or not the player is correct
 	let playerCorrect: bool
 	let answers: object[]
-		
+	// prevents spamming the same the answer
+	let answerIsPicked = false
+	
 	$: {
 		correct_answer = correct_answer
 		choiceMsg = ""
 		playerCorrect = undefined
+		answerIsPicked = false
 		answers =
 			// merge the answers
 			[...incorrect_answers, correct_answer]
@@ -38,6 +41,9 @@
 	}
 	
 	const pickAnswer = (answer: object): void => {
+		if (answerIsPicked) { return }
+		answerIsPicked = true
+		
 		answers = answers.map(item => {
 			return {...item, status: Status.pending}
 		})
