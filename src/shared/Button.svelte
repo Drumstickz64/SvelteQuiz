@@ -23,7 +23,7 @@
 		color: white;
 		background: var(--primary-clr);
 		
-		transition: background 200ms ease-in-out;
+		transition: background 120ms ease-in-out;
 	}
 	
 	button:hover {

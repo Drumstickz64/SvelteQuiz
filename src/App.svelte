@@ -96,6 +96,7 @@
 	main {
 		width: 85%;
 		max-width: 75rem;
+		min-height: 100%;
 		margin: 1.2rem auto 10rem;
 		padding: 0 0.5em;
 	}
