@@ -69,6 +69,8 @@
 				{...currentQuestion}
 			></Question>
 		{/if}
+	{:catch}
+		<p>sorry. something went wrong😖</p>
 	{/await}
 </main>
 

@@ -81,7 +81,7 @@
 				class:incorrect="{ answer.status === Status.incorrect }"
 				on:click="{ () => pickAnswer(answer) }"
 			>
-				{ answer.text }
+				{@html answer.text }
 			</button>
 		{/each}
 	</div>
