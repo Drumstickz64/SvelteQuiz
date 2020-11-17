@@ -80,7 +80,6 @@
 		</Splitter>
 		
 		{#if currentQuestion}
-			{@debug currentQuestion}
 			<Question
 				on:answer="{ handleAnswer }"
 				{...currentQuestion}

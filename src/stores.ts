@@ -11,7 +11,6 @@ const QuestionStore = (): object => {
 	 		return res.data.token
 	 	},
 		loadQuestions: async (difficulty: string, token: string): Promise<void> => {
-			console.log("fetching questions")
 			const req = await axios.get(`https://opentdb.com/api.php?amount=10&difficulty=${difficulty}&token=${token}`)
 			update(questions => [...questions, ...req.data.results])
 		} 
