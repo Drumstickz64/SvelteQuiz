@@ -5,6 +5,7 @@
 	import Question from "./components/Question.svelte"
 	import Bouncer from "./shared/Bouncer.svelte"
 	
+	let started = false
 	let score = 0
 	let lives = 3
 	let sessionToken
@@ -14,17 +15,13 @@
 	let questions: object[]
 	let currentQuestion: undefined|object
 	
-	$: {
-		questions = $questionStore
-		if (questions.length < 3) {
-			questionStore.loadQuestions(difficulty)
-		}
-	}
+	$: questions = $questionStore
 	
 	const setup = async () => {
 		sessionToken = await questionStore.getSessionToken()
 		await questionStore.loadQuestions(difficulty, sessionToken)
 		displayNextQuestion()
+		started = true
 	}
 	
 	const handleAnswer = (ev: CustomEvent): void => {
@@ -45,8 +42,12 @@
 	
 	const displayNextQuestion = () => {
 		currentQuestion = undefined
+		
 		setTimeout(() => {
 			currentQuestion = questions.shift()
+			if (questions.length < 3 && started) {
+				questionStore.loadQuestions(difficulty, sessionToken)
+			}
 		}, 1200)
 	}
 	
