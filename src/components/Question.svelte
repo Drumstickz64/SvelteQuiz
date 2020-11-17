@@ -23,12 +23,24 @@
 	let answers: object[]
 	// prevents spamming the same the answer
 	let answerIsPicked = false
+	let timer = 30
+	let countDownInterval
+	
+	const countDown = () => {
+		timer--
+		if (timer <= 0) {
+			dispatch("answer", { playerCorrect })
+			clearInterval(countDownInterval)
+		}
+	}
 	
 	$: {
 		correct_answer = correct_answer
 		choiceMsg = ""
 		playerCorrect = undefined
 		answerIsPicked = false
+		countDownInterval = setInterval(countDown, 1000)
+		timer = 30
 		answers =
 			// merge the answers
 			[...incorrect_answers, correct_answer]
@@ -43,6 +55,8 @@
 	const pickAnswer = (answer: object): void => {
 		if (answerIsPicked) { return }
 		answerIsPicked = true
+		
+		clearInterval(countDownInterval)
 		
 		answers = answers.map(item => {
 			return {...item, status: Status.pending}
@@ -78,7 +92,7 @@
 	in:fly="{{ x: -1000, duration: 1200 }}"
 	out:fly="{{ x: 1000, duration: 1200 }}"
 >
-	<h2>{@html question }</h2>
+	<h1>{@html question }</h1>
 	
 	<div class="answers">
 		{#each answers as answer}
@@ -99,6 +113,7 @@
 		{ choiceMsg }
 	</h3>
 </article>
+<h2>{ timer }</h2>
 
 <style>
 	.box {
@@ -108,7 +123,7 @@
 		border-radius: 0.5em;
 	}
 	
-	h2 {
+	h1 {
 		color: var(--heading-clr);
 		font-size: 1.25rem;
 		margin-bottom: 1.25em;
@@ -144,5 +159,11 @@
 	
 	h3.incorrect {
 		color: var(--red-clr);
+	}
+	
+	h2 {
+		font-size: 1.5rem;
+		text-align: center;
+		color: var(--primary-clr);
 	}
 </style>

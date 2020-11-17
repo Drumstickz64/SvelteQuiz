@@ -101,7 +101,7 @@
 	}
 	
 	:global(.bouncer) {
-		margin: 2.5rem auto;
+		margin: 3.25rem auto;
 	}
 	
 	#score, #lives {
