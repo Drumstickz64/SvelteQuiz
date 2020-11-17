@@ -22,7 +22,8 @@
     "svelte-check": "^1.0.0",
     "svelte-preprocess": "^4.5.2",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.3",
+    "yarn": "^1.22.10"
   },
   "dependencies": {
     "axios": "^0.21.0",
