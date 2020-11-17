@@ -68,7 +68,8 @@
 
 <article
 	class="box"
-	transition:fly="{{ x: -1000, duration: 1200 }}"
+	in:fly="{{ x: -1000, duration: 1200 }}"
+	out:fly="{{ x: 1000, duration: 1200 }}"
 >
 	<h2>{@html question }</h2>
 	
