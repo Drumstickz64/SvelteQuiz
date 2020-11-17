@@ -6,8 +6,12 @@ const QuestionStore = (): object => {
 	
 	return {
 	 	subscribe,
-		loadQuestions: async (difficulty: string): Promise<void> => {
-			const req = await axios.get(`https://opentdb.com/api.php?amount=10&difficulty=${difficulty}`)
+	 	getSessionToken: async (): Promise<string> => {
+	 		const res = await axios.get("https://opentdb.com/api_token.php?command=request")
+	 		return res.data.token
+	 	},
+		loadQuestions: async (difficulty: string, token: string): Promise<void> => {
+			const req = await axios.get(`https://opentdb.com/api.php?amount=10&difficulty=${difficulty}&token=${token}`)
 			update(questions => [...questions, ...req.data.results])
 		} 
 	}

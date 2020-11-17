@@ -7,11 +7,12 @@
 	
 	let score = 0
 	let lives = 3
+	let sessionToken
+	let difficulty = "easy"
 	
 	// automatic subscription
 	let questions: object[]
 	let currentQuestion: undefined|object
-	let difficulty = "easy"
 	
 	$: {
 		questions = $questionStore
@@ -21,7 +22,8 @@
 	}
 	
 	const setup = async () => {
-		await questionStore.loadQuestions(difficulty)
+		sessionToken = await questionStore.getSessionToken()
+		await questionStore.loadQuestions(difficulty, sessionToken)
 		displayNextQuestion()
 	}
 	
@@ -71,7 +73,7 @@
 			></Question>
 		{/if}
 	{:catch}
-		<p>sorry. something went wrong😖</p>
+		<p>sorry. something went wrong 😖</p>
 	{/await}
 </main>
 
