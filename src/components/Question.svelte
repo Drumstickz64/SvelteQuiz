@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte"
 	import { fly, fade } from "svelte/transition"
+	import Button from "../shared/Button.svelte"
 	
 	const dispatch = createEventDispatcher()
 	
@@ -75,15 +76,14 @@
 	
 	<div class="answers">
 		{#each answers as answer}
-			<button
-				data-answer="{ answer.text }"
-				class:pending="{ answer.status === Status.pending }"
-				class:correct="{ answer.status === Status.correct }"
-				class:incorrect="{ answer.status === Status.incorrect }"
+			<Button
+				pending="{ answer.status === Status.pending }"
+				correct="{ answer.status === Status.correct }"
+				incorrect="{ answer.status === Status.incorrect }"
 				on:click="{ () => pickAnswer(answer) }"
 			>
 				{@html answer.text }
-			</button>
+			</Button>
 		{/each}
 	</div>
 	<h3
@@ -110,7 +110,7 @@
 		border-bottom: 3px solid var(--heading-clr);
 	}
 	
-	.answers > button + button {
+	:global(.answers > button + button) {
 		margin-top: 1.4rem;
 	}
 	
@@ -124,50 +124,6 @@
 		.answers > button + button {
 			margin-top: 0;
 		}
-	}
-	
-	button {
-		display: block;
-		width: 100%;
-		padding: 1em 2em;
-		border: 2px solid var(--primary-clr-dark);
-		font-weight: 700;
-		color: white;
-		background: var(--primary-clr);
-	}
-	
-	button:hover {
-		background: var(--primary-clr-dark);
-	}
-	
-	button:focus {
-		outline: none;
-		box-shadow: var(--shadow-outline);
-	}
-	
-	button.pending {
-		background: var(--yellow-clr);
-		border-color: var(--yellow-clr-dark);
-	}
-	button.pending:hover {
-		background: var(--yellow-clr-dark);
-	}
-	
-	button.correct {
-		background: var(--green-clr);
-		border-color: var(--green-clr-dark);
-	}
-	button.correct:hover {
-		background: var(--green-clr-dark);
-	}
-	
-	button.incorrect {
-		background: var(--red-clr);
-		border-color: var(--red-clr-dark);
-	}
-	
-	button.incorrect:hover {
-		background: var(--red-clr-dark);
 	}
 	
 	h3 {

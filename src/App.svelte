@@ -4,6 +4,7 @@
 	import Footer from "./components/Footer.svelte"
 	import Question from "./components/Question.svelte"
 	import Bouncer from "./shared/Bouncer.svelte"
+	import Splitter from "./shared/Splitter.svelte"
 	
 	let started = false
 	let score = 0
@@ -29,14 +30,15 @@
 			score++
 			scaleDifficulty()
 			displayNextQuestion()
+			
 		} else {
 			lives--;
-			
 			if (lives === 0) {
 				reset()
 			} else {
 				displayNextQuestion()
 			}
+			
 		}
 	}
 	
@@ -72,10 +74,10 @@
 	{#await setup()}
 		<Bouncer></Bouncer>
 	{:then}
-		<div class="splitter">
+		<Splitter>
 			<h3 id="score">Score: { score }</h3>
 			<h3 id="lives">Lives: { lives }</h3>
-		</div>
+		</Splitter>
 		
 		{#if currentQuestion}
 			{@debug currentQuestion}
@@ -101,12 +103,6 @@
 	
 	:global(.bouncer) {
 		margin: 2.5rem auto;
-	}
-	
-	.splitter {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
 	}
 	
 	#score, #lives {
