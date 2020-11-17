@@ -1,10 +1,13 @@
 import svelte from 'rollup-plugin-svelte';
+import clear from "rollup-plugin-clear";
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
+import gzipPlugin from 'rollup-plugin-gzip';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
+import path from "path";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -32,12 +35,16 @@ function serve() {
 export default {
 	input: 'src/main.ts',
 	output: {
-		sourcemap: true,
+		sourcemap: !production,
 		format: 'iife',
 		name: 'app',
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
+		production && clear({
+			targets: [path.join(__dirname, 'public', 'build')]
+		}),
+		
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
@@ -63,7 +70,7 @@ export default {
 			sourceMap: !production,
 			inlineSources: !production
 		}),
-
+		
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),
@@ -74,7 +81,9 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser(),
+		
+		production && gzipPlugin()
 	],
 	watch: {
 		clearScreen: false

@@ -121,7 +121,7 @@
 			gap: 1rem;
 		}
 		
-		.answers > button + button {
+		:global(.answers > button + button) {
 			margin-top: 0;
 		}
 	}
