@@ -30,6 +30,7 @@
 	const handleAnswer = (ev: CustomEvent): void => {
 		if (ev.detail.playerCorrect) {
 			score++
+			scaleDifficulty()
 			displayNextQuestion()
 		} else {
 			lives--;
@@ -47,6 +48,16 @@
 		setTimeout(() => {
 			currentQuestion = questions.shift()
 		}, 1200)
+	}
+	
+	const scaleDifficulty = () => {
+			if (score < 10) {
+				difficulty = "easy"
+			} else if (score < 20) {
+				difficulty = "medium"
+			} else {
+				difficulty = "hard"
+			}
 	}
 	
 	const reset = () => {
