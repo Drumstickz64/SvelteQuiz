@@ -1,6 +1,9 @@
 # SvelteQuiz
 A simple quiz app
 
+## Check it out
+you can visit this app at https://drumstickz-quiz.netlify.app/
+
 
 ## Built with
 **svelte:** a JavaScript component compiler framework.
