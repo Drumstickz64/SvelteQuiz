@@ -1,7 +1,7 @@
 import { writable } from "svelte/store"
 import axios from "axios"
 
-const QuestionStore = (): object => {
+const questionStore = ((): object => {
 	const { subscribe, update } = writable([])
 	
 	return {
@@ -15,7 +15,6 @@ const QuestionStore = (): object => {
 	 			localStorage.sessionToken = token
 	 		}
 	 		
-	 		alert(token)
 	 		return token
 	 	},
 		loadQuestions: async (difficulty: string, token: string): Promise<void> => {
@@ -23,9 +22,7 @@ const QuestionStore = (): object => {
 			update(questions => [...questions, ...req.data.results])
 		} 
 	}
-}
-
-const questionStore = QuestionStore()
+}())
 
 export {
 	questionStore
