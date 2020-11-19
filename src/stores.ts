@@ -7,8 +7,16 @@ const QuestionStore = (): object => {
 	return {
 	 	subscribe,
 	 	getSessionToken: async (): Promise<string> => {
-	 		const res = await axios.get("https://opentdb.com/api_token.php?command=request")
-	 		return res.data.token
+	 		let token: string|null = localStorage.sessionToken || null
+	 		
+	 		if (!token) {
+	 			const res = await axios.get("https://opentdb.com/api_token.php?command=request")
+	 			token = res.data.token
+	 			localStorage.sessionToken = token
+	 		}
+	 		
+	 		alert(token)
+	 		return token
 	 	},
 		loadQuestions: async (difficulty: string, token: string): Promise<void> => {
 			const req = await axios.get(`https://opentdb.com/api.php?amount=10&difficulty=${difficulty}&token=${token}`)
