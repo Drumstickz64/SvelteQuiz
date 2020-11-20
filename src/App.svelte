@@ -6,7 +6,6 @@
 	import Bouncer from "./shared/Bouncer.svelte"
 	import Splitter from "./shared/Splitter.svelte"
 	
-	let started = false
 	let score = 0
 	let lives = 3
 	let sessionToken
@@ -22,7 +21,6 @@
 		sessionToken = await questionStore.getSessionToken()
 		await questionStore.loadQuestions(difficulty, sessionToken)
 		displayNextQuestion()
-		started = true
 	}
 	
 	const handleAnswer = (ev: CustomEvent): void => {
@@ -47,7 +45,7 @@
 		
 		setTimeout(() => {
 			currentQuestion = questions.shift()
-			if (questions.length < 3 && started) {
+			if (questions.length <= 3 && questions.length > 0) {
 				questionStore.loadQuestions(difficulty, sessionToken)
 			}
 		}, 1200)
